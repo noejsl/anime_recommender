@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-robot"></i>
+                    Anime Recommender
+                </h1>
+                <p class="subtitle">Descubre tu próximo anime favorito con inteligencia artificial</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Form Section -->
+            <section class="form-section">
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-sliders-h"></i>
+                        Preferencias de Búsqueda
+                    </h2>
+                    
+                    <form id="recommendationForm" class="preferences-form">
+                        <!-- Géneros -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-theater-masks"></i>
+                                Géneros Preferidos
+                            </label>
+                            <div class="checkbox-grid">
+                                {% for genre in genres %}
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="genres[]" value="{{ genre }}">
+                                    <span class="checkmark"></span>
+                                    {{ genre.title() }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Temas -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-palette"></i>
+                                Temas Preferidos (Opcional)
+                            </label>
+                            <div class="checkbox-grid">
+                                {% for theme in themes %}
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="themes[]" value="{{ theme }}">
+                                    <span class="checkmark"></span>
+                                    {{ theme }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Filtros Adicionales -->
+                        <div class="filters-row">
+                            <div class="filter-group">
+                                <label class="form-label">
+                                    <i class="fas fa-film"></i>
+                                    Tipo
+                                </label>
+                                <select name="type" class="select-input">
+                                    <option value="">Cualquier tipo</option>
+                                    {% for type in types %}
+                                    <option value="{{ type }}">{{ type }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="form-label">
+                                    <i class="fas fa-play-circle"></i>
+                                    Máx. Episodios
+                                </label>
+                                <input type="number" name="max_episodes" class="number-input" placeholder="Sin límite" min="1">
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="form-label">
+                                    <i class="fas fa-star"></i>
+                                    Score Mínimo
+                                </label>
+                                <input type="number" name="min_score" class="number-input" value="7.0" step="0.1" min="0" max="10">
+                            </div>
+
+                            <div class="filter-group">
+                                <label class="form-label">
+                                    <i class="fas fa-list"></i>
+                                    N° Recomendaciones
+                                </label>
+                                <input type="number" name="n_recommendations" class="number-input" value="10" min="1" max="50">
+                            </div>
+                        </div>
+
+                        <!-- Búsqueda de Favoritos -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-heart"></i>
+                                Animes Favoritos (Opcional)
+                            </label>
+                            <div class="favorites-section">
+                                <div class="search-box">
+                                    <input type="text" id="animeSearch" placeholder="Busca tus animes favoritos..." class="search-input">
+                                    <button type="button" id="searchBtn" class="search-btn">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <div id="searchResults" class="search-results"></div>
+                                <div id="favoritesList" class="favorites-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Botón de Envío -->
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-magic"></i>
+                            Generar Recomendaciones
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section">
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-list-alt"></i>
+                        Recomendaciones
+                        <span id="resultsCount" class="results-count"></span>
+                    </h2>
+                    <div id="loading" class="loading hidden">
+                        <div class="spinner"></div>
+                        <p>Generando recomendaciones...</p>
+                    </div>
+                    <div id="resultsContainer" class="results-container"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para detalles del anime -->
+    <div id="animeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Detalles del Anime</h3>
+                <button id="closeModal" class="close-btn">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
